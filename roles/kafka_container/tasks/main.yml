@@ -1,0 +1,45 @@
+
+---
+- name: Pull Zookeeper image
+  containers.podman.podman_image:
+    name: docker.io/confluentinc/cp-zookeeper
+    tag: "{{kafka_version}}"
+
+- name: Pull an Kafka image
+  containers.podman.podman_image:
+    name: docker.io/confluentinc/cp-kafka
+    tag: "{{kafka_version}}"
+
+- name: Create an Kafka pod
+  containers.podman.podman_pod:
+    name: kafka_pod
+    state: started
+    ports:
+      - "2181:2181"
+      - "9092:9092"
+
+- name: Run Zookeeper container
+  containers.podman.podman_container:
+    name: kafka_zookeeper
+    image: "docker.io/confluentinc/cp-zookeeper:{{kafka_version}}"
+    pod: kafka_pod
+    env:
+      ZOOKEEPER_CLIENT_PORT: "2181"
+      ZOOKEEPER_TICK_TIME:   "2000"
+    state: started
+
+- name: Run Kafka Broker container
+  containers.podman.podman_container:
+    name: kafka_broker
+    image: "docker.io/confluentinc/cp-kafka:{{kafka_version}}"
+    pod: kafka_pod
+    requires: kafka_zookeeper
+    env:
+      KAFKA_BROKER_ID: "1"
+      KAFKA_ZOOKEEPER_CONNECT:   "localhost:2181"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: "1"
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: "1"
+    state: started

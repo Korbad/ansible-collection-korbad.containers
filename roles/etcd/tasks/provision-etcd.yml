@@ -1,0 +1,21 @@
+---
+- name: Pull the etcd image
+  community.podman.podman_image:
+    name: quay.io/coreos/etcd
+    state: present
+
+- name: Create a Podman container for etcd
+  community.podman.podman_container:
+    name: etcd
+    state: present
+    image: quay.io/coreos/etcd
+    port_bindings:
+      - {{ port_binding1 }}:{{ port_binding1 }}
+      - {{ port_binding2 }}:{{ port_binding2 }}
+    volumes:
+      - /var/lib/etcd:/etcd-data
+
+- name: Start the etcd container
+  community.podman.podman_container:
+    name: etcd
+    state: started
