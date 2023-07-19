@@ -1,0 +1,4 @@
+- name: Ensure directory exists to house managed containerfiles
+  file:
+    path: "{{ managed_containerfiles_path }}"
+    state: directory
