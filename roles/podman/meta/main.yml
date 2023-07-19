@@ -1,0 +1,4 @@
+---
+dependencies:
+  - role: korbad.workstation.podman
+  - role: korbad.containers.managed_containerfiles

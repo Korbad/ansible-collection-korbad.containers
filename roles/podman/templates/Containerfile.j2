@@ -1,0 +1,7 @@
+FROM python:{{ podman_container_python_version | default('3.8', true) }}
+
+RUN pip install podman ansible ansible-navigator
+
+WORKDIR /app
+
+CMD ["tail", "-f", "/dev/null"]
