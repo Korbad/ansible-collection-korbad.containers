@@ -1,0 +1,19 @@
+---
+- name: Get DISPLAY environment variable
+  command: echo $DISPLAY
+  register: display_output
+
+- name: Run Firefox container
+  containers.podman.podman_container:
+    name: firefox
+    image: docker.io/jess/firefox
+    state: started
+    env:
+      DISPLAY: "{{ display_output.stdout }}"
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - "{{ ansible_env.HOME }}/.mozilla/firefox:/root/.mozilla/firefox"
+    capabilities:
+      - SYS_ADMIN
+    security_opts:
+      - seccomp=unconfined
