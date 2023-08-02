@@ -1,0 +1,4 @@
+transmission_pod_name: transmission_pod
+transmission_container_name: transmission_container
+transmission_image_link: docker.io/linuxserver/transmission
+transmission_image_version: 4.0.3

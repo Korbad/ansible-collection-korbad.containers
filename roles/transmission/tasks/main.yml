@@ -1,0 +1,30 @@
+---
+
+- name: Ensure download and watch directories exist
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "managed_transmission_downloads"
+    - "managed_transmission_watch"
+
+- name: Pull Transmission Docker image
+  containers.podman.podman_image:
+    name: "{{ transmission_image_link }}:{{ transmission_image_version }}"
+
+- name: Run Transmission Docker container
+  containers.podman.podman_container:
+    name: transmission
+    image: "{{ transmission_image_link }}"
+    state: started
+    publish:
+      - "9091:9091"
+      - "51413:51413"
+    volumes:
+      - "{{ ansible_env.HOME }}/managed_transmission_downloads:/downloads"
+      - "{{ ansible_env.HOME }}/managed_transmission_watch:/watch"
+    env:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "America/Chicago"
