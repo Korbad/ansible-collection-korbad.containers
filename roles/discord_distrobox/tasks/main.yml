@@ -1,0 +1,13 @@
+- name: Ensure the distrobox maniphest exists
+  template:
+    src: distrobox.ini.j2
+    dest: "{{ distrobox_manifest_file_path }}"
+  register: distrobox_manifest_file
+
+- name: Ensure distrobox manifest is processed
+  command: distrobox assemble create --file {{ distrobox_manifest_file_path }} --replace
+  when: distrobox_manifest_file is changed
+
+- include_tasks: install_discord.yml
+  vars:
+    distrobox_name: ubuntu_discord

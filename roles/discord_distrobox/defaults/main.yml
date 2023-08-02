@@ -1,0 +1,1 @@
+distrobox_manifest_file_path: "{{ (ansible_env.HOME, 'distrobox.ini') | path_join }}"

@@ -1,0 +1,9 @@
+- name: Update in Distrobox
+  shell: "distrobox-upgrade {{ distrobox_name }}"
+
+- name: Install Discord in Distrobox
+  shell: "distrobox-enter --name {{ distrobox_name }} -- bash -c 'sudo dpkg -i /home/korbad/Downloads/discord-0.0.28.deb'"
+
+- name: Fix any potential missing dependencies
+  shell: "distrobox-enter --name {{ distrobox_name }} -- bash -c 'sudo apt install -f -y'"
+...
