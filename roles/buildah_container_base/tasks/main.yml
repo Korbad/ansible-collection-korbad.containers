@@ -1,0 +1,33 @@
+---
+- name: List all Buildah containers in JSON format and convert to dictionary
+  command: buildah containers --all --json
+  register: buildah_containers_json
+  delegate_to: localhost
+  changed_when: false
+  become: true
+
+- name: Convert JSON to dictionary keyed by container name
+  set_fact:
+    buildah_containers_dict: "{{ buildah_containers_json.stdout | from_json | items2dict(key_name='containername', value_name='id') }}"
+  when: buildah_containers_json.stdout != 'null'
+
+- debug:
+    var: buildah_containers_dict[container_name]
+  when: buildah_containers_dict is defined
+
+- name: Create new Buildah container if it doesn't exist
+  command: buildah from --name {{ container_name }} docker.io/archlinux:latest
+  register: newcontainer
+  become: true
+  when: buildah_containers_dict[container_name] is not defined
+  delegate_to: localhost
+
+- name: Ensure Python 3 is installed
+  command: buildah run {{ container_name }} -- pacman -Syu --noconfirm python
+  become: true
+  delegate_to: localhost
+
+- name: Check environment
+  command: buildah run {{ container_name }} -- env
+  become: true
+  delegate_to: localhost
