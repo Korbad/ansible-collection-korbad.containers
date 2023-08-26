@@ -1,0 +1,3 @@
+---
+- name: Install coreutils and bash packages
+  command: pacman -Sy --noconfirm coreutils bash
