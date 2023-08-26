@@ -1,0 +1,2 @@
+- name: Install pacoloco package
+  command: pacman -Sy --noconfirm pacoloco
