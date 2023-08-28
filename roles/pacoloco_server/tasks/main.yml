@@ -1,0 +1,17 @@
+---
+- name: Create pacoloco container
+  containers.podman.podman_container:
+    name: "{{ pacoloco_container_name }}"
+    image: "{{ pacoloco_image_name }}"
+    state: started
+    recreate: yes
+    ports:
+      - "{{ pacoloco_port }}:{{ pacoloco_port }}"
+
+- name: Deploy pacoloco config
+  template:
+    src: pacoloco_config.j2
+    dest: "{{ pacoloco_config_path }}"
+    owner: root
+    group: root
+    mode: '0644'

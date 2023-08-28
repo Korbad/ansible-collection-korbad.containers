@@ -1,0 +1,12 @@
+# Containerfile.j2
+# Use a specific version of Arch Linux as the base image
+FROM {{ archlinux_image_version }}
+
+# Update package list and install pacoloco
+RUN pacman -Syu --noconfirm pacoloco
+
+# Expose the default pacoloco port
+EXPOSE {{ pacoloco_port }}
+
+# Run pacoloco
+CMD ["pacoloco"]

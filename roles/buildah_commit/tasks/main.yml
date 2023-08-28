@@ -1,0 +1,15 @@
+- include_role:
+    name: buildah_dict
+
+- set_fact:
+    container_id: "{{ buildah_dict[container_name] }}"
+
+- name: Set container metadata
+  command: buildah config --author "{{ buildah_container_author_name }}" --created-by "{{ quay_username }}" --label name={{ container_name }} {{ container_id }}
+  become: true
+  delegate_to: localhost
+
+- name: Commit the container to an image
+  command: buildah commit {{ container_id }} {{ container_name }}
+  become: true
+  delegate_to: localhost

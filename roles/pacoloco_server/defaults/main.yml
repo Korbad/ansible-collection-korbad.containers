@@ -1,0 +1,5 @@
+pacoloco_container_name: pacoloco_container
+pacoloco_image_name: pacoloco_image
+pacoloco_config_path: /etc/pacoloco.yaml
+pacoloco_port: 9129
+archlinux_image_version: archlinux:base-20230723.0.166908

@@ -1,0 +1,4 @@
+- name: Push the image to local registry
+  command: buildah push {{ container_name }} docker://localhost:{{ local_podman_registry_port }}/{{ container_name }}
+  become: true
+  delegate_to: localhost

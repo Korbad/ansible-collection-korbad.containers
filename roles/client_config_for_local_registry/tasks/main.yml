@@ -1,0 +1,19 @@
+- name: Allow insecure registries
+  blockinfile:
+    path: /etc/containers/registries.conf
+    block: |
+      [[registry]]
+      prefix = "localhost:{{ local_podman_registry_port }}"
+      location = "localhost:{{ local_podman_registry_port }}"
+      insecure = true
+    marker: "# {mark} ANSIBLE MANAGED BLOCK FOR INSECURE REGISTRY"
+    insertafter: '\[registries.insecure\]'
+  notify: restart podman
+  become: true
+
+- name: Restart Podman
+  systemd:
+    name: podman
+    state: restarted
+  become: true
+  delegate_to: localhost

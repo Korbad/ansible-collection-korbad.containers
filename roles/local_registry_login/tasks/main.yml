@@ -1,0 +1,5 @@
+- name: Login to quay.io registry and create ${XDG_RUNTIME_DIR}/containers/auth.json
+  containers.podman.podman_login:
+    username: "{{ local_registry_username }}"
+    password: "{{ local_registry_password }}"
+    registry: localhost:{{ local_registry_port }}

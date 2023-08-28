@@ -1,0 +1,2 @@
+local_podman_registry_port: 5000
+registry_data_volume: /var/lib/registry

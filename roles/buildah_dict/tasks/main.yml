@@ -1,0 +1,16 @@
+- name: List all Buildah containers in JSON format and convert to dictionary
+  command: buildah containers --all --json
+  register: buildah_containers_json
+  delegate_to: localhost
+  changed_when: false
+  become: true
+
+- name: Convert JSON to dictionary keyed by container name
+  set_fact:
+    buildah_dict: "{{ buildah_containers_json.stdout | from_json | items2dict(key_name='containername', value_name='id') }}"
+  when: buildah_containers_json.stdout != 'null'
+
+- name: Set empty dict
+  set_fact:
+    buildah_dict: {}
+  when: buildah_dict is undefined
